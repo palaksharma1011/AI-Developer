@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const userModel = require("../models/user.model");
+const redisClient = require("../services/redis.service");
 
 async function userAuthMiddleware(req, res, next) {
   const token = req.cookies.token;
@@ -10,6 +11,14 @@ async function userAuthMiddleware(req, res, next) {
     });
   }
 
+  const isBlackListed = await redisClient.get(token);
+
+  if (isBlackListed) {
+    res.cookie('token'," ");
+    return res.status(401).json({
+      message: "Please register/login",
+    });
+  }
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
     console.log(decoded.id);
@@ -22,7 +31,7 @@ async function userAuthMiddleware(req, res, next) {
 
     req.user = user;
     next();
-  }catch (err) {
+  } catch (err) {
     return res.status(409).json({
       message: "Invalid token",
     });

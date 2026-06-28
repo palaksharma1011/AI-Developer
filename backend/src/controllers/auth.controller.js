@@ -1,4 +1,5 @@
 const userModel = require("../models/user.model");
+const redisClient = require("../services/redis.service");
 const userServices = require("../services/user.service");
 
 async function userRegister(req, res) {
@@ -55,11 +56,29 @@ async function userLogin(req, res) {
   }
 }
 
+// async function userLogout(req, res) {
+//   res.clearCookie("token");
+//   res.status(200).json({
+//     message: "User logged out!!",
+//   });
+// }
+
+// logout through redis - after redis setup
 async function userLogout(req, res) {
-  res.clearCookie("token");
-  res.status(200).json({
-    message: "User logged out!!",
-  });
+  try {
+    const token = req.cookies.token;
+
+    redisClient.set(token, "logout", "EX", 60 * 60 * 24);
+
+    res.status(200).json({
+      message: "Logged OUT!!",
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({
+      message: "error in logging out..",
+    });
+  }
 }
 
 module.exports = { userRegister, userLogin, userLogout };

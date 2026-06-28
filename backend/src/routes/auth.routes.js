@@ -5,6 +5,8 @@ const authValidators = require("../validators/auth.validator");
 const validate = require("../middlewares/validate");
 const authController = require("../controllers/auth.controller");
 
+const authMiddleware = require("../middlewares/auth.middleware");
+
 Router.post(
   "/register",
   authValidators.userAuthValidator,
@@ -18,7 +20,10 @@ Router.post(
   authController.userLogin,
 );
 
-Router.get("/logout",authController.userLogout)
+Router.get("/logout",
+    authMiddleware.userAuthMiddleware,
+    authController.userLogout
+);
 
 
 module.exports = Router;

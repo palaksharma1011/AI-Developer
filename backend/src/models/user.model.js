@@ -30,8 +30,10 @@ userSchema.methods.generateJWT = async function () {
   return jwt.sign(
     {
       id: this.id,
+    //   email:this.email
     },
     process.env.JWT_SECRET_KEY,
+    {expiresIn:'24h'}
   );
 };
 
