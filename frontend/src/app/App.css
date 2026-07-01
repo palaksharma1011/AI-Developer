@@ -1,0 +1,23 @@
+@import "tailwindcss";
+
+:root {
+  /* Primary colors */
+  --color-primary: skyblue;
+  --color-secondary: pink;
+  --color-accent: palegreen;
+
+  /* Background */
+  --color-bg: black;
+
+  /* semantic names */
+  --color-text: white;
+  --color-border: rgb(71, 71, 71);
+
+}
+
+* {
+  /* margin: 0;
+  padding: 0;
+  box-sizing: border-box; */
+  font-family: "Orbitron", sans-serif;
+}
