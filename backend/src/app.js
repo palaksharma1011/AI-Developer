@@ -4,6 +4,7 @@ const authRouter = require("./routes/auth.routes");
 const userRouter=require('./routes/user.routes')
 
 const morgan = require("morgan");
+const errorMiddleware = require("./middlewares/errorMiddleware");
 
 const app = express();
 // middlewares
@@ -20,5 +21,9 @@ app.get("/", (req, res) => {
 
 app.use("/api/auth", authRouter);
 app.use("/api/user",userRouter);
+
+// error middleware last always
+
+app.use(errorMiddleware);
 
 module.exports = app;

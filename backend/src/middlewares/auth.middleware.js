@@ -1,41 +1,31 @@
 const jwt = require("jsonwebtoken");
 const userModel = require("../models/user.model");
 const redisClient = require("../services/redis.service");
+const { verifyJWT } = require("../services/verifyJWT.service");
+const asyncHandler = require("../utils/asyncHandler");
+const AppError = require("../utils/AppError");
 
-async function userAuthMiddleware(req, res, next) {
+const userAuthMiddleware = asyncHandler(async (req, res, next) => {
   const token = req.cookies.token;
 
   if (!token) {
-    return res.status(401).json({
-      message: "Please register/login",
-    });
+    throw new AppError("Please register/login", 401);
   }
 
   const isBlackListed = await redisClient.get(token);
 
   if (isBlackListed) {
-    res.cookie('token'," ");
-    return res.status(401).json({
-      message: "Please register/login",
-    });
+    res.cookie("token", " ");
+    throw new AppError("Please registerr/login", 401);
   }
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
-    console.log(decoded.id);
-    const user = await userModel.findById(decoded.id);
-    if (!user) {
-      return res.status(404).json({
-        message: "user not found",
-      });
-    }
+  const decoded = await verifyJWT(token);
+  const user = await userModel.findById(decoded.id);
+  if (!user) {
+    throw new AppError("User not found", 404);
+  }
 
-    req.user = user;
-    next();
-  } catch (err) {
-    return res.status(409).json({
-      message: "Invalid token",
-    });
-  }
-}
+  req.user = user;
+  next();
+});
 
 module.exports = { userAuthMiddleware };

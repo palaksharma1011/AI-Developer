@@ -1,26 +1,23 @@
 const userModel = require("../models/user.model");
 const redisClient = require("../services/redis.service");
 const userServices = require("../services/user.service");
+const asyncHandler = require("../utils/asyncHandler.js");
 
-async function userRegister(req, res) {
-  try {
-    const user = await userServices.createUser(req.body);
+const userRegister = asyncHandler(async (req, res) => {
+  const user = await userServices.createUser(req.body);
 
-    const token = await user.generateJWT();
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "none",
-      maxAge: 7 * 24 * 60 * 60 * 1000, // optional
-    });
-    res.status(201).json({
-      message: "The user is created",
-      user,
-    });
-  } catch (err) {
-    res.status(400).send(err.message);
-  }
-}
+  const token = await user.generateJWT();
+  res.cookie("token", token, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "none",
+    maxAge: 7 * 24 * 60 * 60 * 1000, // optional
+  });
+  res.status(201).json({
+    message: "The user is created",
+    user,
+  });
+});
 async function userLogin(req, res) {
   try {
     const { email, password } = req.body;
