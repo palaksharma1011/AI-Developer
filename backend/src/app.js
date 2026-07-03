@@ -2,9 +2,10 @@ const express = require("express");
 const cookieParser = require("cookie-parser");
 const authRouter = require("./routes/auth.routes");
 const userRouter=require('./routes/user.routes')
-
+const config = require("./config/config");
 const morgan = require("morgan");
 const errorMiddleware = require("./middlewares/errorMiddleware");
+const cors = require('cors')
 
 const app = express();
 // middlewares
@@ -12,6 +13,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 app.use(cookieParser());
+app.use(cors({
+    origin:[config.CLIENT_URL],
+    credentials:true,
+}))
 
 // health check route
 

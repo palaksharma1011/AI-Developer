@@ -1,16 +1,70 @@
-# React + Vite
+## Error Handling
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+1. axios instance
+2. interceptor
+3. loading state
+4. error state
+5. ErrorAlert component
+6. validation errors
+7. auth errors
+8. network errors
+9. server errors
+10. toast notifications
+11. Error Boundary
+12. reusable error components
 
-Currently, two official plugins are available:
+```js
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+method : ![alt text](image.png)
 
-## React Compiler
+example using of - loading usestate
+import { useState } from "react";
+import api from "../api/api";
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+export default function Login() {
 
-## Expanding the ESLint configuration
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+    const handleLogin = async (e) => {
+        e.preventDefault();
+
+        try {
+            setLoading(true);
+            setError("");
+
+            await api.post("/auth/login", {
+                email,
+                password,
+            });
+
+            // navigate("/");
+
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return (
+        <form onSubmit={handleLogin}>
+            {/* inputs */}
+
+            {error && (
+                <div>
+                    {error}
+                </div>
+            )}
+
+            <button
+                disabled={loading}
+            >
+                {loading
+                    ? "Logging in..."
+                    : "Login"}
+            </button>
+        </form>
+    );
+}
+```js

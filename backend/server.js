@@ -1,5 +1,5 @@
-require("dotenv").config();
 const app = require("./src/app.js");
+const config = require("./src/config/config.js");
 
 const connectDB = require("./src/db/db");
 
@@ -8,6 +8,6 @@ const http = require("http");
 
 const server = http.createServer(app);
 
-server.listen(process.env.PORT, () => {
-  console.log("Server listening at... " + process.env.PORT);
+server.listen(config.PORT, () => {
+  console.log("Server listening at... " + config.PORT);
 });

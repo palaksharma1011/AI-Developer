@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 export default function UserRegister() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -34,7 +35,9 @@ export default function UserRegister() {
       console.log(response);
       navigate("/");
     } catch (err) {
-      console.log(err);
+        setError(err);
+    }finally{
+        setLoading(false);
     }
   };
 

@@ -1,9 +1,10 @@
 const Redis = require("ioredis");
+const config = require("../config/config");
 
 const redisClient = new Redis({
-  host: process.env.REDIS_HOST,
-  port: process.env.REDIS_PORT,
-  password: process.env.REDIS_PASSWORD,
+  host: config.REDIS_HOST,
+  port: config.REDIS_PORT,
+  password: config.REDIS_PASSWORD,
 });
 
 redisClient.on("connect", () => {

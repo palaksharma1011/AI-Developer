@@ -3,14 +3,16 @@ import "../../app/App.css";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Eye, EyeOff, Mail, Lock } from "lucide-react";
-import { Link } from "react-router-dom";
-
+import { Link, useNavigate } from "react-router-dom";
+import axios from "../../config/axios";
 
 export default function UserLogin() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e) => {
+  const navigate=useNavigate();
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     setLoading(true);
@@ -19,7 +21,22 @@ export default function UserLogin() {
     setTimeout(() => {
       setLoading(false);
     }, 2000);
-  };
+          const email = e.target.email.value;
+      const password = e.target.password.value;
+
+      try {
+        const response = await axios.post(
+          "/auth/login",
+          { email, password },
+          { withCredentials: true },
+        );
+        navigate("/");
+      } catch (err) {
+        setError(err);
+      } finally {
+        setLoading(false);
+      }
+  }
 
   return (
     <div className="min-h-screen bg-black flex items-center justify-center px-4 relative overflow-hidden">
@@ -147,6 +164,7 @@ export default function UserLogin() {
 
           {/* button */}
           <motion.button
+            type="submit"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             disabled={loading}
