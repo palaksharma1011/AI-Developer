@@ -1,6 +1,8 @@
 import "../../app/App.css";
 
 import { useState } from "react";
+import { useContext } from "react";
+import { UserContext } from "../../context/User.context.jsx";
 import { motion } from "framer-motion";
 import { Eye, EyeOff, Mail, Lock } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
@@ -11,7 +13,10 @@ export default function UserLogin() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const navigate=useNavigate();
+  const {setUser}=useContext(UserContext);
+
+  const navigate = useNavigate();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -21,22 +26,25 @@ export default function UserLogin() {
     setTimeout(() => {
       setLoading(false);
     }, 2000);
-          const email = e.target.email.value;
-      const password = e.target.password.value;
+    const email = e.target.email.value;
+    const password = e.target.password.value;
 
-      try {
-        const response = await axios.post(
-          "/auth/login",
-          { email, password },
-          { withCredentials: true },
-        );
-        navigate("/");
-      } catch (err) {
-        setError(err);
-      } finally {
-        setLoading(false);
-      }
-  }
+    try {
+      const response = await axios.post(
+        "/auth/login",
+        { email, password },
+        { withCredentials: true },
+      );
+      localStorage.setItem('token',response.data.user);
+      setUser(response.data.user);
+      console.log(response.data.user);
+      navigate("/");
+    } catch (err) {
+      setError(err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-black flex items-center justify-center px-4 relative overflow-hidden">

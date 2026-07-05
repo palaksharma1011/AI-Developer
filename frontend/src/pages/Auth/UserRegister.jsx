@@ -8,11 +8,16 @@ import { Link } from "react-router-dom";
 import axios from "../../config/axios";
 import { useNavigate } from "react-router-dom";
 
+import {useContext} from 'react';
+import {UserContext} from '../../context/User.context';
+
 export default function UserRegister() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
+
+  const {setUser}=useContext(UserContext);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -32,7 +37,9 @@ export default function UserRegister() {
         { email, password },
         { withCredentials: true },
       );
-      console.log(response);
+      console.log(response.data.user);
+      localStorage.setItem('token',response.data.user);
+      setUser(response.data.user);
       navigate("/");
     } catch (err) {
         setError(err);
