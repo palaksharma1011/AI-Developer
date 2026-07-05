@@ -2,6 +2,7 @@ const express = require("express");
 const cookieParser = require("cookie-parser");
 const authRouter = require("./routes/auth.routes");
 const userRouter=require('./routes/user.routes')
+const projectRouter=require('./routes/project.routes')
 const config = require("./config/config");
 const morgan = require("morgan");
 const errorMiddleware = require("./middlewares/errorMiddleware");
@@ -26,6 +27,7 @@ app.get("/", (req, res) => {
 
 app.use("/api/auth", authRouter);
 app.use("/api/user",userRouter);
+app.use("/api/projects",projectRouter);
 
 // error middleware last always
 

@@ -10,13 +10,13 @@ const authMiddleware = require("../middlewares/auth.middleware");
 Router.post(
   "/register",
   authValidators.userAuthValidator,
-  validate.userAuthResult,
+  validate.allErrorResult,
   authController.userRegister,
 );
 Router.post(
   "/login",
   authValidators.userAuthValidator,
-  validate.userAuthResult,
+  validate.allErrorResult,
   authController.userLogin,
 );
 

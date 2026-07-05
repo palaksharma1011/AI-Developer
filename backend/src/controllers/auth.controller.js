@@ -20,6 +20,7 @@ const userRegister = asyncHandler(async (req, res) => {
     user,
   });
 });
+
 const userLogin=asyncHandler(async(req, res) =>{
   const { email, password } = req.body;
   const user = await userModel.findOne({ email }).select("password");
