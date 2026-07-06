@@ -2,12 +2,9 @@ const projectModel = require("../models/project.model");
 const AppError = require("../utils/AppError");
 const userModel = require("../models/user.model");
 
-const createProject = async ({ name, userID }) => {
-  if (!name) {
-    throw new AppError("name is required", 400);
-  }
-  if (!userID) {
-    throw new AppError("userID not found", 400);
+const createProject = async ({ name, userID, desc, status, progress,stack }) => {
+  if (!name || !userID || !desc || !status || !progress || !stack) {
+    throw new AppError("Provide all details of project", 400);
   }
   const isExists = await projectModel.findOne({
     name: name,
@@ -15,10 +12,15 @@ const createProject = async ({ name, userID }) => {
   if (isExists) {
     throw new AppError("Project name is already registered", 400);
   }
+  console.log("stack is",stack)
 
   const project = await projectModel.create({
     name,
     users: [userID],
+    desc,
+    status,
+    progress,
+    stack:stack
   });
   return project;
 };
@@ -47,9 +49,11 @@ const addUserToProject = async ({ anotherUserEmail, projectID }) => {
   if (!projectID) {
     throw new AppError("project Id not provided");
   }
-  const userID = await userModel.findOne({
-    email: anotherUserEmail,
-  }).select('_id');
+  const userID = await userModel
+    .findOne({
+      email: anotherUserEmail,
+    })
+    .select("_id");
   if (!userID) {
     throw new AppError("Invalid User email");
   }
@@ -59,23 +63,21 @@ const addUserToProject = async ({ anotherUserEmail, projectID }) => {
     throw new AppError("No projects Found", 400);
   }
 
-  const userInProject=await projectModel.exists(
-{    _id:projectID,
-    users:userID}
-  )
-  if(userInProject){
-    throw new AppError("User Already in Project",400);
-}
+  const userInProject = await projectModel.exists({
+    _id: projectID,
+    users: userID,
+  });
+  if (userInProject) {
+    throw new AppError("User Already in Project", 400);
+  }
 
-const project=await projectModel.findByIdAndUpdate(projectID,
-   { $push:{
-        users:{
-            $each:[
-                userID
-            ]
-        }
-    }}
-)
+  const project = await projectModel.findByIdAndUpdate(projectID, {
+    $push: {
+      users: {
+        $each: [userID],
+      },
+    },
+  });
 
   return project;
 };

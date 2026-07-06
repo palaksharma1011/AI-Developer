@@ -3,9 +3,16 @@ const asyncHandler = require("../utils/asyncHandler");
 const projectService = require("../services/project.service");
 
 const createNewProject = asyncHandler(async (req, res) => {
-  const { name } = req.body;
+  const { name, desc, status, progress , stack } = req.body;
   const userID = req.user._id;
-  const project = await projectService.createProject({ name, userID });
+  const project = await projectService.createProject({
+    name,
+    userID,
+    desc,
+    status,
+    progress,
+    stack
+  });
 
   res.status(201).json({
     message: "Project created",
@@ -15,8 +22,8 @@ const createNewProject = asyncHandler(async (req, res) => {
 });
 
 const showAllProjectsByUser = asyncHandler(async (req, res) => {
-  const id=req.user._id;
-  
+  const id = req.user._id;
+
   const projects = await projectService.showAllProjects({ id });
 
   res.status(200).json({
@@ -25,17 +32,20 @@ const showAllProjectsByUser = asyncHandler(async (req, res) => {
   });
 });
 
-const addUserToProject=asyncHandler(async(req,res)=>{
-    const {anotherUserEmail}=req.body;
-    const {projectID}=req.params;
+const addUserToProject = asyncHandler(async (req, res) => {
+  const { anotherUserEmail } = req.body;
+  const { projectID } = req.params;
 
-    const project=await projectService.addUserToProject({anotherUserEmail, projectID});
+  const project = await projectService.addUserToProject({
+    anotherUserEmail,
+    projectID,
+  });
 
-    res.status(200).json({
-        message:"Following user added to project",
-        anotherUser:req.body.anotherUserEmail,
-        project:project
-    })
-})
+  res.status(200).json({
+    message: "Following user added to project",
+    anotherUser: req.body.anotherUserEmail,
+    project: project,
+  });
+});
 
-module.exports = { createNewProject,showAllProjectsByUser , addUserToProject };
+module.exports = { createNewProject, showAllProjectsByUser, addUserToProject };
