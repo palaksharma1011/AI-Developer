@@ -7,6 +7,7 @@ import {
   Users, MessageSquareText, Brain, GitBranch, ArrowUpRight,
   Flame, GitPullRequest, Circle, CheckCircle2, Clock,
 } from "lucide-react";
+import Projects from "../components/DashBoard/Projects";
 
 // ---------------------------------------------------------------------------
 // Design tokens
@@ -377,65 +378,7 @@ export default function Dashboard() {
         </section>
 
         {/* Projects */}
-        <section>
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h2 className="text-white font-bold text-lg">Projects</h2>
-              <p className="text-xs text-neutral-500">everything currently in flight</p>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {projects.map((p) => (
-              <div
-                key={p.name}
-                className="rounded-2xl p-5 transition-transform duration-200 hover:-translate-y-0.5"
-                style={{ background: surface, border: `1px solid ${border}` }}
-              >
-                <div className="flex items-start justify-between mb-3">
-                  <div>
-                    <h3 className="text-white font-semibold text-sm">{p.name}</h3>
-                    <p className="text-xs text-neutral-500 mt-0.5">{p.desc}</p>
-                  </div>
-                  <span
-                    className="flex items-center gap-1.5 text-[11px] font-medium px-2 py-1 rounded-full shrink-0"
-                    style={{ background: `${statusStyle[p.status].dot}1A`, color: statusStyle[p.status].text }}
-                  >
-                    <Circle size={6} fill="currentColor" stroke="none" />
-                    {p.status}
-                  </span>
-                </div>
-
-                <div className="mb-3">
-                  <div className="flex justify-between text-[10px] text-neutral-500 mb-1">
-                    <span>Progress</span>
-                    <span className="font-mono text-neutral-300">{p.progress}%</span>
-                  </div>
-                  <div className="h-1.5 rounded-full bg-white/5 overflow-hidden">
-                    <div
-                      className="h-full rounded-full"
-                      style={{ width: `${p.progress}%`, background: statusStyle[p.status].dot }}
-                    />
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div className="flex gap-1.5 flex-wrap">
-                    {p.stack.map((s) => (
-                      <span key={s} className="text-[10px] px-2 py-0.5 rounded-full bg-white/5 text-neutral-400">
-                        {s}
-                      </span>
-                    ))}
-                  </div>
-                  <span className="flex items-center gap-1 text-[10px] text-neutral-500 shrink-0">
-                    <Clock size={11} />
-                    {p.updated}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
+<Projects/>
 
         <footer className="mt-10 pt-6 border-t flex items-center justify-between" style={{ borderColor: border }}>
           <p className="text-[11px] text-neutral-600">devboard · built for teams who ship</p>
