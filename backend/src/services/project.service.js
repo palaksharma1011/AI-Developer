@@ -2,7 +2,14 @@ const projectModel = require("../models/project.model");
 const AppError = require("../utils/AppError");
 const userModel = require("../models/user.model");
 
-const createProject = async ({ name, userID, desc, status, progress,stack }) => {
+const createProject = async ({
+  name,
+  userID,
+  desc,
+  status,
+  progress,
+  stack,
+}) => {
   if (!name || !userID || !desc || !status || !progress || !stack) {
     throw new AppError("Provide all details of project", 400);
   }
@@ -12,7 +19,7 @@ const createProject = async ({ name, userID, desc, status, progress,stack }) => 
   if (isExists) {
     throw new AppError("Project name is already registered", 400);
   }
-  console.log("stack is",stack)
+  console.log("stack is", stack);
 
   const project = await projectModel.create({
     name,
@@ -20,7 +27,7 @@ const createProject = async ({ name, userID, desc, status, progress,stack }) => 
     desc,
     status,
     progress,
-    stack:stack
+    stack: stack,
   });
   return project;
 };
@@ -82,4 +89,21 @@ const addUserToProject = async ({ anotherUserEmail, projectID }) => {
   return project;
 };
 
-module.exports = { createProject, showAllProjects, addUserToProject };
+const getProject = async ({ id }) => {
+  if (!id) {
+    throw new AppError("id not provided");
+  }
+
+  const project = await projectModel.findById(id);
+  if (!project) {
+    throw new AppError("project not provided");
+  }
+  return project;
+};
+
+module.exports = {
+  createProject,
+  showAllProjects,
+  addUserToProject,
+  getProject,
+};

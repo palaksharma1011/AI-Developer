@@ -27,4 +27,11 @@ Router.post(
   projectController.addUserToProject,
 );
 
+Router.get(
+    "/getProject/:id",
+      validate.allErrorResult,
+  authMiddleware.userAuthMiddleware,
+  projectController.getProject,
+)
+
 module.exports = Router;

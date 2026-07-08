@@ -1,13 +1,33 @@
 import React, { useState, useMemo } from "react";
 import {
-  BarChart, Bar, LineChart, Line, AreaChart, Area,
-  PieChart, Pie, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis,
+  BarChart,
+  Bar,
+  LineChart,
+  Line,
+  AreaChart,
+  Area,
+  PieChart,
+  Pie,
+  Cell,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
 } from "recharts";
 import {
-  Users, MessageSquareText, Brain, GitBranch, ArrowUpRight,
-  Flame, GitPullRequest, Circle, CheckCircle2, Clock,
+  Users,
+  MessageSquareText,
+  Brain,
+  GitBranch,
+  ArrowUpRight,
+  Flame,
+  GitPullRequest,
+  Circle,
+  CheckCircle2,
+  Clock,
 } from "lucide-react";
 import Projects from "../components/DashBoard/Projects";
+import { Link } from "react-router-dom";
 
 // ---------------------------------------------------------------------------
 // Design tokens
@@ -54,49 +74,15 @@ const workflowData = [
   { day: "W4", done: 19 },
 ];
 
-const projects = [
-  {
-    name: "Nimbus API",
-    desc: "Realtime order-sync microservice",
-    status: "Active",
-    progress: 72,
-    stack: ["Node", "Express", "Mongo"],
-    updated: "2h ago",
-  },
-  {
-    name: "Pulse Dashboard",
-    desc: "Internal analytics client",
-    status: "Review",
-    progress: 91,
-    stack: ["React", "Tailwind"],
-    updated: "5h ago",
-  },
-  {
-    name: "Auth Gateway",
-    desc: "SSO + token refresh service",
-    status: "Blocked",
-    progress: 40,
-    stack: ["Node", "Redis"],
-    updated: "1d ago",
-  },
-  {
-    name: "Vault CLI",
-    desc: "Internal secrets tool",
-    status: "Active",
-    progress: 58,
-    stack: ["Node", "CLI"],
-    updated: "3d ago",
-  },
-];
-
-const statusStyle = {
-  Active: { dot: "#A3E635", text: "#A3E635" },
-  Review: { dot: "#FBBF24", text: "#FBBF24" },
-  Blocked: { dot: "#F472B6", text: "#F472B6" },
-};
 
 // 28-day activity pulse — each day's dominant work type gets a color
-const pulseTypes = ["contribution", "collaboration", "focus", "workflow", "off"];
+const pulseTypes = [
+  "contribution",
+  "collaboration",
+  "focus",
+  "workflow",
+  "off",
+];
 const pulse = Array.from({ length: 28 }, (_, i) => {
   const seed = (i * 37) % 100;
   if (seed < 8) return "off";
@@ -120,14 +106,27 @@ function StatCard({ label, value, icon: Icon, accent }) {
         <Icon size={18} style={{ color: accent }} />
       </div>
       <div className="min-w-0">
-        <p className="text-[11px] uppercase tracking-wider text-neutral-500 truncate">{label}</p>
-        <p className="text-xl font-bold text-white font-mono leading-tight">{value}</p>
+        <p className="text-[11px] uppercase tracking-wider text-neutral-500 truncate">
+          {label}
+        </p>
+        <p className="text-xl font-bold text-white font-mono leading-tight">
+          {value}
+        </p>
       </div>
     </div>
   );
 }
 
-function CardShell({ accent, icon: Icon, title, tag, stat, statLabel, why, children }) {
+function CardShell({
+  accent,
+  icon: Icon,
+  title,
+  tag,
+  stat,
+  statLabel,
+  why,
+  children,
+}) {
   return (
     <div
       className="rounded-2xl p-5 flex flex-col gap-3 relative overflow-hidden group"
@@ -141,25 +140,42 @@ function CardShell({ accent, icon: Icon, title, tag, stat, statLabel, why, child
         <div className="flex items-center gap-2.5">
           <div
             className="w-9 h-9 rounded-lg flex items-center justify-center"
-            style={{ background: `${accent}1A`, border: `1px solid ${accent}33` }}
+            style={{
+              background: `${accent}1A`,
+              border: `1px solid ${accent}33`,
+            }}
           >
             <Icon size={16} style={{ color: accent }} />
           </div>
           <div>
-            <h3 className="text-sm font-semibold text-white leading-tight">{title}</h3>
-            <p className="text-[10px] uppercase tracking-wider" style={{ color: accent }}>{tag}</p>
+            <h3 className="text-sm font-semibold text-white leading-tight">
+              {title}
+            </h3>
+            <p
+              className="text-[10px] uppercase tracking-wider"
+              style={{ color: accent }}
+            >
+              {tag}
+            </p>
           </div>
         </div>
         <div className="text-right">
-          <p className="text-lg font-bold text-white font-mono leading-none">{stat}</p>
+          <p className="text-lg font-bold text-white font-mono leading-none">
+            {stat}
+          </p>
           <p className="text-[10px] text-neutral-500 mt-0.5">{statLabel}</p>
         </div>
       </div>
 
       <div className="h-[110px] -mx-2">{children}</div>
 
-      <p className="text-[11px] text-neutral-500 leading-snug border-t pt-2" style={{ borderColor: border }}>
-        <span className="font-semibold" style={{ color: `${accent}CC` }}>Why it matters — </span>
+      <p
+        className="text-[11px] text-neutral-500 leading-snug border-t pt-2"
+        style={{ borderColor: border }}
+      >
+        <span className="font-semibold" style={{ color: `${accent}CC` }}>
+          Why it matters —{" "}
+        </span>
         {why}
       </p>
     </div>
@@ -195,19 +211,32 @@ export default function Dashboard() {
               <GitBranch size={18} className="text-lime-400" />
             </div>
             <div>
-              <h1 className="text-white font-bold text-lg tracking-tight">ctrl ( C + V ) </h1>
-              <p className="text-[11px] text-neutral-500 -mt-0.5">Project Analytics</p>
+              <h1 className="text-white font-bold text-lg tracking-tight">
+                ctrl ( C + V ){" "}
+              </h1>
+              <p className="text-[11px] text-neutral-500 -mt-0.5">
+                Project Analytics
+              </p>
             </div>
           </div>
 
           <div className="flex items-center gap-4">
-            <div className="hidden sm:flex items-center gap-1.5 rounded-full px-3 py-1.5 border" style={{ borderColor: border, background: surface }}>
+            <div
+              className="hidden sm:flex items-center gap-1.5 rounded-full px-3 py-1.5 border"
+              style={{ borderColor: border, background: surface }}
+            >
               <Flame size={14} className="text-amber-400" />
-              <span className="text-xs font-mono text-white">{streak} day streak</span>
+              <span className="text-xs font-mono text-white">
+                {streak} day streak
+              </span>
             </div>
+            <Link to='/user/Profile'>
             <div className="w-9 h-9 rounded-full bg-gradient-to-br from-cyan-400 via-pink-400 to-lime-400 p-[2px]">
-              <div className="w-full h-full rounded-full bg-black flex items-center justify-center text-[11px] font-bold text-white">AR</div>
+              <div className="w-full h-full rounded-full bg-black flex items-center justify-center text-[11px] font-bold text-white">
+                <img src="/svg/Profile.svg" />
+              </div>
             </div>
+            </Link>
           </div>
         </header>
 
@@ -218,7 +247,9 @@ export default function Dashboard() {
         >
           <div className="shrink-0">
             <p className="text-xs font-semibold text-white">Activity pulse</p>
-            <p className="text-[10px] text-neutral-500">last 28 days · dominant work type</p>
+            <p className="text-[10px] text-neutral-500">
+              last 28 days · dominant work type
+            </p>
           </div>
           <div className="flex gap-1 flex-wrap flex-1">
             {pulse.map((t, i) => (
@@ -233,7 +264,10 @@ export default function Dashboard() {
           <div className="flex gap-3 flex-wrap text-[10px] text-neutral-500 shrink-0">
             {Object.entries(C).map(([k, v]) => (
               <span key={k} className="flex items-center gap-1">
-                <span className="w-2 h-2 rounded-sm inline-block" style={{ background: v }} />
+                <span
+                  className="w-2 h-2 rounded-sm inline-block"
+                  style={{ background: v }}
+                />
                 {k}
               </span>
             ))}
@@ -242,10 +276,30 @@ export default function Dashboard() {
 
         {/* Top stats */}
         <section className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-8">
-          <StatCard label="Projects" value="4" icon={GitBranch} accent={C.workflow} />
-          <StatCard label="Open PRs" value="7" icon={GitPullRequest} accent={C.collaboration} />
-          <StatCard label="Team" value="5" icon={Users} accent={C.contribution} />
-          <StatCard label="Velocity" value="+18%" icon={ArrowUpRight} accent={C.focus} />
+          <StatCard
+            label="Projects"
+            value="4"
+            icon={GitBranch}
+            accent={C.workflow}
+          />
+          <StatCard
+            label="Open PRs"
+            value="7"
+            icon={GitPullRequest}
+            accent={C.collaboration}
+          />
+          <StatCard
+            label="Team"
+            value="5"
+            icon={Users}
+            accent={C.contribution}
+          />
+          <StatCard
+            label="Velocity"
+            value="+18%"
+            icon={ArrowUpRight}
+            accent={C.focus}
+          />
         </section>
 
         {/* Analytics + CTA */}
@@ -253,7 +307,9 @@ export default function Dashboard() {
           <div className="flex items-center justify-between mb-4">
             <div>
               <h2 className="text-white font-bold text-lg">Team analytics</h2>
-              <p className="text-xs text-neutral-500">how the team actually works, not just what it ships</p>
+              <p className="text-xs text-neutral-500">
+                how the team actually works, not just what it ships
+              </p>
             </div>
           </div>
 
@@ -270,11 +326,26 @@ export default function Dashboard() {
                 why="Prevents free-riding by surfacing individual effort and task ownership."
               >
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={contributionData} margin={{ top: 5, right: 8, left: -20, bottom: 0 }}>
-                    <XAxis dataKey="name" tick={{ fill: muted, fontSize: 10 }} axisLine={false} tickLine={false} />
+                  <BarChart
+                    data={contributionData}
+                    margin={{ top: 5, right: 8, left: -20, bottom: 0 }}
+                  >
+                    <XAxis
+                      dataKey="name"
+                      tick={{ fill: muted, fontSize: 10 }}
+                      axisLine={false}
+                      tickLine={false}
+                    />
                     <YAxis hide />
-                    <Tooltip contentStyle={tooltipStyle} cursor={{ fill: "#ffffff08" }} />
-                    <Bar dataKey="commits" radius={[6, 6, 0, 0]} fill={C.contribution} />
+                    <Tooltip
+                      contentStyle={tooltipStyle}
+                      cursor={{ fill: "#ffffff08" }}
+                    />
+                    <Bar
+                      dataKey="commits"
+                      radius={[6, 6, 0, 0]}
+                      fill={C.contribution}
+                    />
                   </BarChart>
                 </ResponsiveContainer>
               </CardShell>
@@ -290,11 +361,25 @@ export default function Dashboard() {
                 why="Reveals team friction through communication patterns and response times."
               >
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={collaborationData} margin={{ top: 5, right: 8, left: -20, bottom: 0 }}>
-                    <XAxis dataKey="day" tick={{ fill: muted, fontSize: 10 }} axisLine={false} tickLine={false} />
+                  <LineChart
+                    data={collaborationData}
+                    margin={{ top: 5, right: 8, left: -20, bottom: 0 }}
+                  >
+                    <XAxis
+                      dataKey="day"
+                      tick={{ fill: muted, fontSize: 10 }}
+                      axisLine={false}
+                      tickLine={false}
+                    />
                     <YAxis hide />
                     <Tooltip contentStyle={tooltipStyle} />
-                    <Line type="monotone" dataKey="mins" stroke={C.collaboration} strokeWidth={2.5} dot={{ r: 3, fill: C.collaboration }} />
+                    <Line
+                      type="monotone"
+                      dataKey="mins"
+                      stroke={C.collaboration}
+                      strokeWidth={2.5}
+                      dot={{ r: 3, fill: C.collaboration }}
+                    />
                   </LineChart>
                 </ResponsiveContainer>
               </CardShell>
@@ -311,7 +396,14 @@ export default function Dashboard() {
               >
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
-                    <Pie data={focusData} dataKey="value" innerRadius={30} outerRadius={45} paddingAngle={4} stroke="none">
+                    <Pie
+                      data={focusData}
+                      dataKey="value"
+                      innerRadius={30}
+                      outerRadius={45}
+                      paddingAngle={4}
+                      stroke="none"
+                    >
                       <Cell fill={C.focus} />
                       <Cell fill="#2A2A2A" />
                     </Pie>
@@ -331,17 +423,39 @@ export default function Dashboard() {
                 why="Finds process inefficiencies via completion time, blockers and dependencies."
               >
                 <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={workflowData} margin={{ top: 5, right: 8, left: -20, bottom: 0 }}>
+                  <AreaChart
+                    data={workflowData}
+                    margin={{ top: 5, right: 8, left: -20, bottom: 0 }}
+                  >
                     <defs>
                       <linearGradient id="wf" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor={C.workflow} stopOpacity={0.5} />
-                        <stop offset="100%" stopColor={C.workflow} stopOpacity={0} />
+                        <stop
+                          offset="0%"
+                          stopColor={C.workflow}
+                          stopOpacity={0.5}
+                        />
+                        <stop
+                          offset="100%"
+                          stopColor={C.workflow}
+                          stopOpacity={0}
+                        />
                       </linearGradient>
                     </defs>
-                    <XAxis dataKey="day" tick={{ fill: muted, fontSize: 10 }} axisLine={false} tickLine={false} />
+                    <XAxis
+                      dataKey="day"
+                      tick={{ fill: muted, fontSize: 10 }}
+                      axisLine={false}
+                      tickLine={false}
+                    />
                     <YAxis hide />
                     <Tooltip contentStyle={tooltipStyle} />
-                    <Area type="monotone" dataKey="done" stroke={C.workflow} strokeWidth={2.5} fill="url(#wf)" />
+                    <Area
+                      type="monotone"
+                      dataKey="done"
+                      stroke={C.workflow}
+                      strokeWidth={2.5}
+                      fill="url(#wf)"
+                    />
                   </AreaChart>
                 </ResponsiveContainer>
               </CardShell>
@@ -352,7 +466,8 @@ export default function Dashboard() {
               onClick={() => setPage("deep")}
               className="lg:col-span-1 rounded-2xl p-5 flex flex-col justify-between text-left relative overflow-hidden group transition-transform duration-200 hover:-translate-y-0.5"
               style={{
-                background: "linear-gradient(160deg, #0A0A0A 0%, #0A0A0A 60%, #111 100%)",
+                background:
+                  "linear-gradient(160deg, #0A0A0A 0%, #0A0A0A 60%, #111 100%)",
                 border: `1px solid ${border}`,
               }}
             >
@@ -363,25 +478,40 @@ export default function Dashboard() {
                 }}
               />
               <div className="relative">
-                <p className="text-[10px] uppercase tracking-wider text-neutral-500 mb-2">Go deeper</p>
-                <h3 className="text-white font-bold text-xl leading-snug">More<br />analysis</h3>
+                <p className="text-[10px] uppercase tracking-wider text-neutral-500 mb-2">
+                  Go deeper
+                </p>
+                <h3 className="text-white font-bold text-xl leading-snug">
+                  More
+                  <br />
+                  analysis
+                </h3>
                 <p className="text-xs text-neutral-500 mt-3 leading-snug">
-                  Per-person breakdowns, historical trends and blocker timelines across all four lenses.
+                  Per-person breakdowns, historical trends and blocker timelines
+                  across all four lenses.
                 </p>
               </div>
               <div className="relative flex items-center gap-2 text-sm font-semibold text-white mt-6">
                 Open report
-                <ArrowUpRight size={16} className="transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                <ArrowUpRight
+                  size={16}
+                  className="transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                />
               </div>
             </button>
           </div>
         </section>
 
         {/* Projects */}
-<Projects/>
+        <Projects />
 
-        <footer className="mt-10 pt-6 border-t flex items-center justify-between" style={{ borderColor: border }}>
-          <p className="text-[11px] text-neutral-600">devboard · built for teams who ship</p>
+        <footer
+          className="mt-10 pt-6 border-t flex items-center justify-between"
+          style={{ borderColor: border }}
+        >
+          <p className="text-[11px] text-neutral-600">
+            devboard · built for teams who ship
+          </p>
           <GitBranch size={14} className="text-neutral-600" />
         </footer>
       </div>
@@ -394,12 +524,23 @@ export default function Dashboard() {
 // ---------------------------------------------------------------------------
 function DeepAnalysisPage({ onBack }) {
   return (
-    <div className="min-h-screen w-full flex items-center justify-center font-sans" style={{ background: bg }}>
+    <div
+      className="min-h-screen w-full flex items-center justify-center font-sans"
+      style={{ background: bg }}
+    >
       <div className="text-center px-6">
-        <p className="text-xs uppercase tracking-widest mb-3" style={{ color: C.collaboration }}>coming soon</p>
-        <h1 className="text-white font-bold text-2xl mb-2">Deep analysis report</h1>
+        <p
+          className="text-xs uppercase tracking-widest mb-3"
+          style={{ color: C.collaboration }}
+        >
+          coming soon
+        </p>
+        <h1 className="text-white font-bold text-2xl mb-2">
+          Deep analysis report
+        </h1>
         <p className="text-neutral-500 text-sm mb-6 max-w-sm mx-auto">
-          This is a placeholder for the detailed, per-person breakdown page we'll design next.
+          This is a placeholder for the detailed, per-person breakdown page
+          we'll design next.
         </p>
         <button
           onClick={onBack}

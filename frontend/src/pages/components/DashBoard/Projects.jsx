@@ -15,6 +15,7 @@ import {
   CheckCircle2,
   Clock,
 } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 
 const bg = "#000000";
 const surface = "#0A0A0A";
@@ -49,6 +50,7 @@ const Projects = () => {
   const [error, setError] = useState(null);
 
   const [projects, setProjects] = useState([]);
+  const navigate = useNavigate();
 
   const fetchProjects = async () => {
     try {
@@ -66,24 +68,16 @@ const Projects = () => {
       setLoading(false);
     }
   };
-  useEffect(()=>{
+  useEffect(() => {
     fetchProjects();
-  },[]);
+  }, []);
 
   if (loading) {
-  return (
-    <div className="text-white">
-      Loading projects...
-    </div>
-  );
-}
-if (error) {
-  return (
-    <div className="text-red-500">
-      {error}
-    </div>
-  );
-}
+    return <div className="text-white">Loading projects...</div>;
+  }
+  if (error) {
+    return <div className="text-red-500">{error}</div>;
+  }
   return (
     <section>
       <div className="flex items-center justify-between mb-4">
@@ -92,14 +86,6 @@ if (error) {
           <p className="text-xs text-neutral-500">
             everything currently in flight
           </p>
-          <span>
-            {/* <button
-              onClick={fetchProjects}
-              className="bg-white p-2 rounded-2xl text-cyan-800 text-3xl m-2"
-            >
-              SHOW
-            </button> */}
-          </span>
         </div>
       </div>
 
@@ -109,6 +95,9 @@ if (error) {
             key={p._id}
             className="rounded-2xl p-5 transition-transform duration-200 hover:-translate-y-0.5"
             style={{ background: surface, border: `1px solid ${border}` }}
+            onClick={() => {
+              navigate(`/project/${p._id}/manage`);
+            }}
           >
             <div className="flex items-start justify-between mb-3">
               <div>
@@ -165,6 +154,7 @@ if (error) {
               </span>
             </div>
           </div>
+          
         ))}
       </div>
     </section>

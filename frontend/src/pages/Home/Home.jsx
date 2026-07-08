@@ -28,7 +28,7 @@ const Home = () => {
       <section className="project">
         <div className="rounded-xl border border-zinc-800 bg-zinc-950 p-5 shadow-lg">
           <button
-            onClick={() => navigate("/project/create")}
+            onClick={() => navigate("/project/manage/create")}
             className="rounded-lg bg-cyan-500 px-5 py-3 font-medium text-black transition-all duration-200 hover:bg-cyan-400 hover:shadow-[0_0_20px_rgba(34,211,238,0.5)] active:scale-95"
           >
             <span>Create project</span>

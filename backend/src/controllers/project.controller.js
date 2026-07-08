@@ -48,4 +48,15 @@ const addUserToProject = asyncHandler(async (req, res) => {
   });
 });
 
-module.exports = { createNewProject, showAllProjectsByUser, addUserToProject };
+const getProject=asyncHandler(async (req,res)=>{
+    const {id}=req.params;
+
+    const project=await projectService.getProject({id});
+
+    res.status(200).json({
+        message:"Project fetched",
+        project:project
+    })
+})
+
+module.exports = { createNewProject, showAllProjectsByUser, addUserToProject,getProject };
