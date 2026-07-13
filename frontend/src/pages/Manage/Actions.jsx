@@ -195,8 +195,6 @@ export default function Actions() {
                 </span>
               </div>
 
-      
-
               <p className="mt-5 max-w-3xl leading-7 text-neutral-400">
                 {project?.desc}
               </p>
@@ -316,13 +314,13 @@ export default function Actions() {
             </div>
             <div className=" flex justify-center gap-5 rounded-xl border border-zinc-800 bg-zinc-950 p-5 m-4 shadow-lg">
               <button
-                onClick={() => navigate(`/project/${id}/manage`)}
+                onClick={() => navigate(`/project/${id}/work`)}
                 className="rounded-lg bg-cyan-500 px-5 py-3  font-medium text-black transition-all duration-200 hover:bg-cyan-400 hover:shadow-[0_0_20px_rgba(34,211,238,0.5)] active:scale-95"
               >
                 <span>Start Working</span>
               </button>
               <button
-                onClick={() => navigate(`/project/${id}/work`)}
+                onClick={() => navigate(`/project/${id}/Schedule`)}
                 className="rounded-lg bg-cyan-500 px-5 py-3 font-medium text-black transition-all duration-200 hover:bg-cyan-400 hover:shadow-[0_0_20px_rgba(34,211,238,0.5)] active:scale-95"
               >
                 <span>Schedule Working</span>

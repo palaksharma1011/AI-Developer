@@ -24,6 +24,9 @@ const projectSchema = new mongoose.Schema(
     },
     progress: {
       type: Number,
+      min: 0,
+      max: 100,
+      default: 0,
       required: true,
     },
     stack: [

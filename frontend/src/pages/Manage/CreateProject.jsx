@@ -75,7 +75,7 @@ const CreateProject = () => {
         withCredentials: true,
       });
       console.log(response);
-      navigate('/project/manage/Dashboard')
+      navigate("/project/Dashboard");
     } catch (err) {
       console.log(err);
       setError(err.response?.data?.message || "Something went wrong");

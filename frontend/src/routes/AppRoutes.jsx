@@ -19,9 +19,11 @@ const AppRoutes = () => {
         <Route path="/register" element={<UserRegister />} />
 
         {/* Projects */}
-        <Route path="/project/manage/create" element={<CreateProject />} />
-        <Route path="/project/manage/Dashboard" element={<DashBoard />} />
+        <Route path="/project/create" element={<CreateProject />} />
+        <Route path="/project/Dashboard" element={<DashBoard />} />
         <Route path="/project/:id/work" element={<WorkScreen />} />
+        <Route path="/project/:id/manage" element={<Actions />} />
+        {/* not made */}
         <Route path="/project/:id/schedule" element={<Actions />} />
 
         {/* User */}

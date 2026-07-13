@@ -8,8 +8,8 @@ import { Link } from "react-router-dom";
 import axios from "../../config/axios";
 import { useNavigate } from "react-router-dom";
 
-import {useContext} from 'react';
-import {UserContext} from '../../context/User.context';
+import { useContext } from "react";
+import { UserContext } from "../../context/User.context";
 
 export default function UserRegister() {
   const [showPassword, setShowPassword] = useState(false);
@@ -17,7 +17,7 @@ export default function UserRegister() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const {setUser}=useContext(UserContext);
+  const { setUser } = useContext(UserContext);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -30,21 +30,24 @@ export default function UserRegister() {
 
     const email = e.target.email.value;
     const password = e.target.password.value;
-
+    const username = e.target.username.value;
+    const bio = e.target.bio.value;
+    console.log("username"+username);
+    console.log("bio"+bio);
     try {
       const response = await axios.post(
         "/auth/register",
-        { email, password },
+        { email, password, username, bio },
         { withCredentials: true },
       );
       console.log(response.data.user);
-      localStorage.setItem('token',response.data.user);
+      localStorage.setItem("token", response.data.user);
       setUser(response.data.user);
       navigate("/");
     } catch (err) {
-        setError(err);
-    }finally{
-        setLoading(false);
+      setError(err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -90,6 +93,40 @@ export default function UserRegister() {
                 type="text"
                 name="username"
                 placeholder="Enter username"
+                required
+                className="
+                  w-full
+                  bg-black/40
+                  border
+                  border-gray-700
+                  rounded-xl
+                  py-3
+                  pl-11
+                  pr-4
+                  text-white
+                  focus:border-sky-400
+                  focus:ring-2
+                  focus:ring-sky-400/30
+                  outline-none
+                  transition
+                "
+              />
+            </div>
+          </div>
+          {/* bio */}
+          <div>
+            <label className="text-sm text-gray-300 mb-2 block">Bio</label>
+
+            <div className="relative">
+              <User
+                size={18}
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500"
+              />
+
+              <input
+                type="text"
+                name="bio"
+                placeholder="Have any bio?"
                 required
                 className="
                   w-full

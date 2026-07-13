@@ -10,7 +10,7 @@ Router.post(
   "/create",
   validate.allErrorResult,
   authMiddleware.userAuthMiddleware,
-  projectValidator.projectBodyValidator,
+  projectValidator.projectValidator,
   projectController.createNewProject,
 );
 

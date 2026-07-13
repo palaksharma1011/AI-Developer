@@ -9,21 +9,21 @@ const authMiddleware = require("../middlewares/auth.middleware");
 
 Router.post(
   "/register",
-  authValidators.userAuthValidator,
+  authValidators.userRegisterValidator,
   validate.allErrorResult,
   authController.userRegister,
 );
 Router.post(
   "/login",
-  authValidators.userAuthValidator,
+  authValidators.userLoginValidator,
   validate.allErrorResult,
   authController.userLogin,
 );
 
-Router.get("/logout",
-    authMiddleware.userAuthMiddleware,
-    authController.userLogout
+Router.get(
+  "/logout",
+  authMiddleware.userAuthMiddleware,
+  authController.userLogout,
 );
-
 
 module.exports = Router;

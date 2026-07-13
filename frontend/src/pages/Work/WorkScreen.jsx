@@ -17,6 +17,7 @@ import {
   Circle,
   Plus,
 } from "lucide-react";
+import CreateChatModal from "../components/Work/CreateChatModal";
 
 /* =========================================================================
    DESIGN TOKENS
@@ -552,6 +553,8 @@ export default function WorkScreen() {
   const [codePanelMsg, setCodePanelMsg] = useState(null);
   const scrollRef = useRef(null);
 
+  const [openChatModal, setOpenChatModal] = useState(false);
+
   const activeContact = CONTACTS.find((c) => c.id === activeId);
   const messages = messagesByChat[activeId] || [];
 
@@ -626,9 +629,14 @@ export default function WorkScreen() {
             className="p-2 rounded-full"
             style={{ background: C.violetSoft, color: C.violet }}
             aria-label="New chat"
+            onClick={() => setOpenChatModal(true)}
           >
             <Plus size={18} />
           </button>
+          <CreateChatModal
+            open={openChatModal}
+            onClose={() => setOpenChatModal(false)}
+          />
         </div>
         <div className="px-3 pb-3 flex-shrink-0">
           <div

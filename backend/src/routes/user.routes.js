@@ -10,4 +10,9 @@ Router.get(
   userController.userProfile,
 );
 
+Router.get('/getAllUser',
+  authMiddleware.userAuthMiddleware,
+  userController.getAllUser
+)
+
 module.exports = Router;
