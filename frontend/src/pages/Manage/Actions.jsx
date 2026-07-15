@@ -40,7 +40,7 @@ const border = "#1A1A1A";
 const project = { name: "Nimbus API", status: "Active", progress: 72 };
 
 const initialMembers = [
-  { name: "Aria Rahman", initials: "AR", role: "Owner" },
+  { name: "Aria ", initials: "AR", role: "Owner" },
   { name: "Neel Kapoor", initials: "NK", role: "Editor" },
   { name: "Sam Torres", initials: "ST", role: "Editor" },
   { name: "Priya Nair", initials: "PN", role: "Viewer" },
@@ -146,6 +146,25 @@ export default function Actions() {
   useEffect(() => {
     fetchProjects();
   }, []);
+
+  const handleAddUser=async(e)=>{
+    // e.preventDefault();
+    // try {
+    //   setLoading(true);
+    //   setError("");
+    //   const response = await axios.post(`/projects/addUser/${id}`, {
+    //     withCredentials: true,
+    //   });
+    //   console.log(response.data.project);
+    //   setProject(response.data.project);
+    // } catch (err) {
+    //   console.log(err);
+    //   setError(err.response?.data?.message || "Something went wrong");
+    // } finally {
+    //   setLoading(false);
+    // }
+    console.log(location.state)
+  }
 
   return (
     <div
@@ -339,6 +358,12 @@ export default function Actions() {
             label="Add people"
             accent={C.contribution}
             onClick={() => setShowInvite((v) => !v)}
+          />
+          <ActionButton
+            icon={UserPlus}
+            label="Add user"
+            accent={C.contribution}
+            onClick={handleAddUser}
           />
           <ActionButton
             icon={copied ? Check : Link2}

@@ -49,20 +49,17 @@ const showAllProjects = async ({ id }) => {
   return projects;
 };
 
-const addUserToProject = async ({ anotherUserEmail, projectID }) => {
-  if (!anotherUserEmail) {
-    throw new AppError("anotherUserEmail not provided");
+const addUserToProject = async ({ anotherID, projectID }) => {
+  if (!anotherID) {
+    throw new AppError("anotherID not provided");
   }
   if (!projectID) {
     throw new AppError("project Id not provided");
   }
-  const userID = await userModel
-    .findOne({
-      email: anotherUserEmail,
-    })
-    .select("_id");
-  if (!userID) {
-    throw new AppError("Invalid User email");
+  const user = await userModel
+    .findById(anotherID);
+  if (!user) {
+    throw new AppError("Invalid userID");
   }
   const projectExists = await projectModel.findById(projectID);
 
@@ -70,18 +67,11 @@ const addUserToProject = async ({ anotherUserEmail, projectID }) => {
     throw new AppError("No projects Found", 400);
   }
 
-  const userInProject = await projectModel.exists({
-    _id: projectID,
-    users: userID,
-  });
-  if (userInProject) {
-    throw new AppError("User Already in Project", 400);
-  }
 
   const project = await projectModel.findByIdAndUpdate(projectID, {
     $push: {
       users: {
-        $each: [userID],
+        $each: [anotherID],
       },
     },
   });

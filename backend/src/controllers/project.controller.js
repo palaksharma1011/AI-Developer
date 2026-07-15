@@ -33,17 +33,17 @@ const showAllProjectsByUser = asyncHandler(async (req, res) => {
 });
 
 const addUserToProject = asyncHandler(async (req, res) => {
-  const { anotherUserEmail } = req.body;
+  const { anotherID } = req.body;
   const { projectID } = req.params;
 
   const project = await projectService.addUserToProject({
-    anotherUserEmail,
+    anotherID,
     projectID,
   });
 
   res.status(200).json({
     message: "Following user added to project",
-    anotherUser: req.body.anotherUserEmail,
+    anotherUser: req.body.anotherID,
     project: project,
   });
 });
