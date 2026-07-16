@@ -23,6 +23,8 @@ import {
 } from "lucide-react";
 import ProjectHealth from "../components/ProjectActions/ProjectHealth";
 import HealthCard from "../components/ProjectActions/HealthCard";
+import CreateChatModal from "../components/Work/CreateChatModal";
+import AddUser from "../components/ProjectActions/AddUser";
 
 // ---------------------------------------------------------------------------
 // Design tokens — kept identical to the main dashboard
@@ -108,6 +110,9 @@ export default function Actions() {
   const [role, setRole] = useState("Editor");
   const [copied, setCopied] = useState(false);
 
+  const [openChatModal, setOpenChatModal] = useState(false);
+  
+
   const { id } = useParams();
 
   const addMember = () => {
@@ -147,7 +152,7 @@ export default function Actions() {
     fetchProjects();
   }, []);
 
-  const handleAddUser=async(e)=>{
+  const handleAddUser = async (e) => {
     // e.preventDefault();
     // try {
     //   setLoading(true);
@@ -163,8 +168,8 @@ export default function Actions() {
     // } finally {
     //   setLoading(false);
     // }
-    console.log(location.state)
-  }
+    console.log(location.state);
+  };
 
   return (
     <div
@@ -363,7 +368,11 @@ export default function Actions() {
             icon={UserPlus}
             label="Add user"
             accent={C.contribution}
-            onClick={handleAddUser}
+            onClick={() => setOpenChatModal(true)}
+          />
+          <AddUser
+            open={openChatModal}
+            onClose={() => setOpenChatModal(false)}
           />
           <ActionButton
             icon={copied ? Check : Link2}
