@@ -41,13 +41,6 @@ const border = "#1A1A1A";
 
 const project = { name: "Nimbus API", status: "Active", progress: 72 };
 
-const initialMembers = [
-  { name: "Aria ", initials: "AR", role: "Owner" },
-  { name: "Neel Kapoor", initials: "NK", role: "Editor" },
-  { name: "Sam Torres", initials: "ST", role: "Editor" },
-  { name: "Priya Nair", initials: "PN", role: "Viewer" },
-];
-
 const roleColor = { Owner: C.focus, Editor: C.contribution, Viewer: "#8A8A8A" };
 
 const activity = [
@@ -104,26 +97,11 @@ function ActionButton({ icon: Icon, label, accent, danger, onClick }) {
 }
 
 export default function Actions() {
-  const [members, setMembers] = useState(initialMembers);
-  const [showInvite, setShowInvite] = useState(false);
-  const [email, setEmail] = useState("");
-  const [role, setRole] = useState("Editor");
   const [copied, setCopied] = useState(false);
 
   const [openChatModal, setOpenChatModal] = useState(false);
 
   const { id } = useParams();
-
-  const addMember = () => {
-    if (!email.trim()) return;
-    const initials = email.trim().slice(0, 2).toUpperCase();
-    setMembers([...members, { name: email.trim(), initials, role }]);
-    setEmail("");
-    setShowInvite(false);
-  };
-
-  const removeMember = (name) =>
-    setMembers(members.filter((m) => m.name !== name));
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -166,7 +144,7 @@ export default function Actions() {
             size={15}
             className="transition-transform group-hover:-translate-x-1"
             onClick={() => {
-              navigate("/project/manage/Dashboard");
+              navigate("/project/Dashboard");
             }}
           />
           Back to Projects
@@ -279,7 +257,7 @@ export default function Actions() {
                 {project?.users.length}
               </h3>
 
-              <p className="mt-1 text-xs text-neutral-500">Active members</p>
+              <p className="mt-1 text-xs text-neutral-500">Acti ve members</p>
             </div>
 
             <div
@@ -342,12 +320,6 @@ export default function Actions() {
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 mb-6">
           <ActionButton
             icon={UserPlus}
-            label="Add people"
-            accent={C.contribution}
-            onClick={() => setShowInvite((v) => !v)}
-          />
-          <ActionButton
-            icon={UserPlus}
             label="Add user"
             accent={C.contribution}
             onClick={() => setOpenChatModal(true)}
@@ -393,128 +365,68 @@ export default function Actions() {
           <ActionButton icon={Trash2} label="Delete project" danger />
         </div>
 
-        {/* Invite panel */}
-        {showInvite && (
-          <div
-            className="rounded-2xl p-5 mb-6"
-            style={{
-              background: surface,
-              border: `1px solid ${C.contribution}40`,
-            }}
-          >
-            <p className="text-xs font-semibold text-white mb-3">
-              Invite someone to Nimbus API
-            </p>
-            <div className="flex flex-col sm:flex-row gap-2.5">
-              <input
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="name@company.com"
-                className="flex-1 rounded-lg px-3 py-2 text-sm bg-black/60 text-white placeholder-neutral-600 outline-none border focus:border-cyan-400/50 transition-colors"
-                style={{ borderColor: border }}
-              />
-              <div className="relative">
-                <select
-                  value={role}
-                  onChange={(e) => setRole(e.target.value)}
-                  className="appearance-none rounded-lg pl-3 pr-8 py-2 text-sm bg-black/60 text-white border outline-none cursor-pointer"
-                  style={{ borderColor: border }}
-                >
-                  <option>Editor</option>
-                  <option>Viewer</option>
-                  <option>Owner</option>
-                </select>
-                <ChevronDown
-                  size={13}
-                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-neutral-500 pointer-events-none"
-                />
-              </div>
-              <button
-                onClick={addMember}
-                className="rounded-lg px-4 py-2 text-sm font-semibold text-black shrink-0"
-                style={{ background: C.contribution }}
-              >
-                Send invite
-              </button>
-            </div>
-          </div>
-        )}
-
         <ProjectHealth />
 
-
         {/* USERS */}
-<div className="mb-6">
-  <div className="mb-4 flex items-center justify-between">
-    <div>
-      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-neutral-500">
-        Project Members
-      </p>
-      <p className="mt-1 text-sm text-neutral-400">
-        {users.length} {users.length === 1 ? "member" : "members"}
-      </p>
-    </div>
+        <div className="mb-6">
+          <div className="mb-4 flex items-center justify-between">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-neutral-500">
+                Project Members
+              </p>
+              <p className="mt-1 text-sm text-neutral-400">
+                {users.length} {users.length === 1 ? "member" : "members"}
+              </p>
+            </div>
 
-    <div className="rounded-full border border-cyan-400/20 bg-cyan-400/10 px-3 py-1 text-xs font-medium text-cyan-300">
-      {users.length}
-    </div>
-  </div>
-
-  <div
-    className="overflow-hidden rounded-2xl"
-    style={{
-      background: surface,
-      border: `1px solid ${border}`,
-    }}
-  >
-    {users.map((m, index) => (
-      <div
-        key={m._id}
-        className={`group flex items-center justify-between px-5 py-4 transition-all duration-200 hover:bg-white/[0.03] ${
-          index !== users.length - 1 ? "border-b" : ""
-        }`}
-        style={{
-          borderColor: border,
-        }}
-      >
-        <div className="flex min-w-0 items-center gap-4">
-          {/* Avatar */}
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-cyan-400 to-blue-500 text-sm font-semibold text-black shadow-lg shadow-cyan-500/20">
-            {m.username?.charAt(0).toUpperCase()}
+            <div className="rounded-full border border-cyan-400/20 bg-cyan-400/10 px-3 py-1 text-xs font-medium text-cyan-300">
+              {users.length}
+            </div>
           </div>
 
-          {/* User Info */}
-          <div className="min-w-0">
-            <h4 className="truncate text-sm font-semibold text-white">
-              {m.username}
-            </h4>
+          <div
+            className="overflow-hidden rounded-2xl"
+            style={{
+              background: surface,
+              border: `1px solid ${border}`,
+            }}
+          >
+            {users.map((m, index) => (
+              <div
+                key={m._id}
+                className={`group flex items-center justify-between px-5 py-4 transition-all duration-200 hover:bg-white/[0.03] ${
+                  index !== users.length - 1 ? "border-b" : ""
+                }`}
+                style={{
+                  borderColor: border,
+                }}
+              >
+                <div className="flex min-w-0 items-center gap-4">
+                  {/* Avatar */}
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-cyan-400 to-blue-500 text-sm font-semibold text-black shadow-lg shadow-cyan-500/20">
+                    {m.username?.charAt(0).toUpperCase()}
+                  </div>
 
-            <p className="truncate text-xs text-neutral-500">
-              {m.email || "No email available"}
-            </p>
+                  {/* User Info */}
+                  <div className="min-w-0">
+                    <h4 className="truncate text-sm font-semibold text-white">
+                      {m.username}
+                    </h4>
+
+                    <p className="truncate text-xs text-neutral-500">
+                      {m.email || "No email available"}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Badge */}
+                <span className="rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-400">
+                  Member
+                </span>
+              </div>
+            ))}
           </div>
         </div>
-
-        {/* Badge */}
-        <span className="rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-400">
-          Member
-        </span>
-      </div>
-    ))}
-  </div>
-</div>
-
-
-        {/* Recent activity */}
-        {/* <p className="text-[10px] uppercase tracking-wider text-neutral-500 mb-2.5">Recent activity</p> */}
-        {/* <div className="rounded-2xl divide-y" style={{ background: surface, border: `1px solid ${border}`, borderColor: border }}>
-          {activity.map((a, i) => (
-            <div key={i} className="flex items-center justify-between px-4 sm:px-5 py-3" style={{ borderColor: border }}>
-              <span className="text-xs text-neutral-300">{a.text}</span>
-              <span className="text-[10px] text-neutral-600 shrink-0 ml-3">{a.time}</span>
-            </div>
-          ))}
-        </div> */}
       </div>
     </div>
   );
