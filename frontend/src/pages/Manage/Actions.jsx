@@ -111,7 +111,6 @@ export default function Actions() {
   const [copied, setCopied] = useState(false);
 
   const [openChatModal, setOpenChatModal] = useState(false);
-  
 
   const { id } = useParams();
 
@@ -130,6 +129,7 @@ export default function Actions() {
   const [error, setError] = useState(null);
 
   const [project, setProject] = useState(null);
+  const [users, setUsers] = useState([]);
   const navigate = useNavigate();
 
   const fetchProjects = async () => {
@@ -141,6 +141,7 @@ export default function Actions() {
       });
       console.log(response.data.project);
       setProject(response.data.project);
+      setUsers(response.data.project.users);
     } catch (err) {
       console.log(err);
       setError(err.response?.data?.message || "Something went wrong");
@@ -151,25 +152,6 @@ export default function Actions() {
   useEffect(() => {
     fetchProjects();
   }, []);
-
-  const handleAddUser = async (e) => {
-    // e.preventDefault();
-    // try {
-    //   setLoading(true);
-    //   setError("");
-    //   const response = await axios.post(`/projects/addUser/${id}`, {
-    //     withCredentials: true,
-    //   });
-    //   console.log(response.data.project);
-    //   setProject(response.data.project);
-    // } catch (err) {
-    //   console.log(err);
-    //   setError(err.response?.data?.message || "Something went wrong");
-    // } finally {
-    //   setLoading(false);
-    // }
-    console.log(location.state);
-  };
 
   return (
     <div
@@ -460,54 +442,68 @@ export default function Actions() {
 
         <ProjectHealth />
 
-        {/* Members */}
-        <p className="text-[10px] uppercase tracking-wider text-neutral-500 mb-2.5">
-          Members · {members.length}
-        </p>
-        <div
-          className="rounded-2xl divide-y mb-6"
-          style={{
-            background: surface,
-            border: `1px solid ${border}`,
-            borderColor: border,
-          }}
-        >
-          {members.map((m) => (
-            <div
-              key={m.name}
-              className="flex items-center justify-between px-4 sm:px-5 py-3"
-              style={{ borderColor: border }}
-            >
-              <div className="flex items-center gap-3 min-w-0">
-                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-400 via-pink-400 to-lime-400 p-[1.5px] shrink-0">
-                  <div className="w-full h-full rounded-full bg-black flex items-center justify-center text-[10px] font-bold text-white">
-                    {m.initials}
-                  </div>
-                </div>
-                <span className="text-sm text-white truncate">{m.name}</span>
-              </div>
-              <div className="flex items-center gap-3 shrink-0">
-                <span
-                  className="text-[11px] font-medium px-2 py-0.5 rounded-full"
-                  style={{
-                    background: `${roleColor[m.role]}1A`,
-                    color: roleColor[m.role],
-                  }}
-                >
-                  {m.role}
-                </span>
-                {m.role !== "Owner" && (
-                  <button
-                    onClick={() => removeMember(m.name)}
-                    className="text-neutral-600 hover:text-white transition-colors"
-                  >
-                    <X size={14} />
-                  </button>
-                )}
-              </div>
-            </div>
-          ))}
+
+        {/* USERS */}
+<div className="mb-6">
+  <div className="mb-4 flex items-center justify-between">
+    <div>
+      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-neutral-500">
+        Project Members
+      </p>
+      <p className="mt-1 text-sm text-neutral-400">
+        {users.length} {users.length === 1 ? "member" : "members"}
+      </p>
+    </div>
+
+    <div className="rounded-full border border-cyan-400/20 bg-cyan-400/10 px-3 py-1 text-xs font-medium text-cyan-300">
+      {users.length}
+    </div>
+  </div>
+
+  <div
+    className="overflow-hidden rounded-2xl"
+    style={{
+      background: surface,
+      border: `1px solid ${border}`,
+    }}
+  >
+    {users.map((m, index) => (
+      <div
+        key={m._id}
+        className={`group flex items-center justify-between px-5 py-4 transition-all duration-200 hover:bg-white/[0.03] ${
+          index !== users.length - 1 ? "border-b" : ""
+        }`}
+        style={{
+          borderColor: border,
+        }}
+      >
+        <div className="flex min-w-0 items-center gap-4">
+          {/* Avatar */}
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-cyan-400 to-blue-500 text-sm font-semibold text-black shadow-lg shadow-cyan-500/20">
+            {m.username?.charAt(0).toUpperCase()}
+          </div>
+
+          {/* User Info */}
+          <div className="min-w-0">
+            <h4 className="truncate text-sm font-semibold text-white">
+              {m.username}
+            </h4>
+
+            <p className="truncate text-xs text-neutral-500">
+              {m.email || "No email available"}
+            </p>
+          </div>
         </div>
+
+        {/* Badge */}
+        <span className="rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-400">
+          Member
+        </span>
+      </div>
+    ))}
+  </div>
+</div>
+
 
         {/* Recent activity */}
         {/* <p className="text-[10px] uppercase tracking-wider text-neutral-500 mb-2.5">Recent activity</p> */}

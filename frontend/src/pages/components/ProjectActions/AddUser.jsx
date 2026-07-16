@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 import { useMemo, useState } from "react";
 import { Search, UserPlus, Users, User, X, Check } from "lucide-react";
 
@@ -8,9 +8,10 @@ import { useEffect } from "react";
 
 import { useParams } from "react-router-dom";
 
+import { toast } from "react-toastify";
 
 const AddUser = ({ open, onClose }) => {
-      const [search, setSearch] = useState("");
+  const [search, setSearch] = useState("");
   const [selected, setSelected] = useState([]);
   const [members, setMembers] = useState([]);
 
@@ -19,13 +20,13 @@ const AddUser = ({ open, onClose }) => {
 
   const navigate = useNavigate();
 
-  const {id}=useParams();
+  const { id } = useParams();
 
   const fetchUsers = async () => {
     try {
       setLoading(true);
       setError("");
-      const response = await axios.get("user/getAllUser", {
+      const response = await axios.get(`projects/getOtherUsers/${id}`, {
         withCredentials: true,
       });
       console.log(response.data);
@@ -40,6 +41,24 @@ const AddUser = ({ open, onClose }) => {
   useEffect(() => {
     fetchUsers();
   }, []);
+
+  const addUsersToProject = async (e) => {
+    try {
+      setLoading(true);
+      setError("");
+      const response = await axios.post(
+        `projects/addUser/${id}`,
+        { anotherIDs: selected },
+        { withCredentials: true },
+      );
+        window.location.reload();
+    } catch (err) {
+      console.log(err);
+      toast.error(err.response?.data?.message || "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   if (loading) {
     return <div className="text-shadow-blue-600">Loading projects...</div>;
@@ -58,16 +77,8 @@ const AddUser = ({ open, onClose }) => {
       prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
     );
   };
-
-
-  const submit = () => {
-    console.log({
-      type: selected.length <= 1 ? "personal" : "group",
-      users: selected,
-    });
-  };
   return (
-        <div className="fixed inset-0 z-[999] flex items-center justify-center">
+    <div className="fixed inset-0 z-[999] flex items-center justify-center">
       {/* Backdrop */}
 
       <div
@@ -83,7 +94,7 @@ const AddUser = ({ open, onClose }) => {
         <div className="flex items-center justify-between border-b border-neutral-800 px-6 py-5">
           <div>
             <p className="text-xs tracking-[0.25em] uppercase text-neutral-500">
-              Communication
+              Project members list
             </p>
 
             <h2 className="mt-1 text-2xl font-bold text-white">Add Users</h2>
@@ -142,7 +153,9 @@ const AddUser = ({ open, onClose }) => {
 
                     <div>
                       <p className="font-medium text-white">{user.username}</p>
-                      <p className="text-cyan-400/100 p-1 text-xs">{user.email}</p>
+                      <p className="text-cyan-400/100 p-1 text-xs">
+                        {user.email}
+                      </p>
 
                       <p className="text-xs text-neutral-500">
                         {user.added ? "Already in project" : "Available"}
@@ -170,20 +183,18 @@ const AddUser = ({ open, onClose }) => {
           {/* Footer */}
 
           <div className="mt-6 flex flex-col gap-3 border-t border-neutral-800 pt-5 sm:flex-row sm:justify-between">
-
             <button
-              onClick={submit}
+              onClick={addUsersToProject}
               className="flex items-center justify-center gap-2 rounded-xl border border-yellow-400 bg-yellow-400/10 px-5 py-3 font-semibold text-yellow-300 transition hover:bg-yellow-400 hover:text-black"
             >
               {selected.length <= 1 ? <User size={18} /> : <Users size={18} />}
-
               Add Users
             </button>
           </div>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default AddUser
+export default AddUser;

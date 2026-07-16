@@ -3,7 +3,7 @@ const asyncHandler = require("../utils/asyncHandler");
 const projectService = require("../services/project.service");
 
 const createNewProject = asyncHandler(async (req, res) => {
-  const { name, desc, status, progress , stack } = req.body;
+  const { name, desc, status, progress, stack } = req.body;
   const userID = req.user._id;
   const project = await projectService.createProject({
     name,
@@ -11,7 +11,7 @@ const createNewProject = asyncHandler(async (req, res) => {
     desc,
     status,
     progress,
-    stack
+    stack,
   });
 
   res.status(201).json({
@@ -47,15 +47,29 @@ const addUserToProject = asyncHandler(async (req, res) => {
   });
 });
 
-const getProject=asyncHandler(async (req,res)=>{
-    const {id}=req.params;
+const getProject = asyncHandler(async (req, res) => {
+  const { id } = req.params;
 
-    const project=await projectService.getProject({id});
+  const project = await projectService.getProject({ id });
 
-    res.status(200).json({
-        message:"Project fetched",
-        project:project
-    })
-})
+  res.status(200).json({
+    message: "Project fetched",
+    project: project,
+  });
+});
+const getOtherUsers = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const users = await projectService.getOtherUsers({ id });
+  res.status(200).json({
+    message: "All users not in project fetched",
+    users: users,
+  });
+});
 
-module.exports = { createNewProject, showAllProjectsByUser, addUserToProject,getProject };
+module.exports = {
+  createNewProject,
+  showAllProjectsByUser,
+  addUserToProject,
+  getProject,
+  getOtherUsers,
+};

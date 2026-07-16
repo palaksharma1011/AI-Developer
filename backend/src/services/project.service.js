@@ -83,11 +83,33 @@ const getProject = async ({ id }) => {
     throw new AppError("id not provided");
   }
 
-  const project = await projectModel.findById(id);
+  const project = await projectModel
+    .findById(id)
+    .populate("users", "username email");
   if (!project) {
     throw new AppError("project not provided");
   }
   return project;
+};
+
+const getOtherUsers = async ({ id }) => {
+  if (!id) {
+    throw new AppError("No id for project provided");
+  }
+
+  const project = await projectModel.findById(id);
+  if (!project) {
+    throw new AppError("Invalid project id");
+  }
+
+  const excludeUsers = [...project.users];
+
+  const allUsers = await userModel.find({
+    _id: {
+      $nin: excludeUsers,
+    },
+  });
+  return allUsers;
 };
 
 module.exports = {
@@ -95,4 +117,5 @@ module.exports = {
   showAllProjects,
   addUserToProject,
   getProject,
+  getOtherUsers,
 };

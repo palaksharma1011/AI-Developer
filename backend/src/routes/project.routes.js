@@ -28,10 +28,17 @@ Router.post(
 );
 
 Router.get(
-    "/getProject/:id",
-      validate.allErrorResult,
+  "/getProject/:id",
+  validate.allErrorResult,
   authMiddleware.userAuthMiddleware,
   projectController.getProject,
-)
+);
+
+Router.get(
+  "/getOtherUsers/:id",
+  validate.allErrorResult,
+  authMiddleware.userAuthMiddleware,
+  projectController.getOtherUsers,
+);
 
 module.exports = Router;
