@@ -19,7 +19,6 @@ const createProject = async ({
   if (isExists) {
     throw new AppError("Project name is already registered", 400);
   }
-  console.log("stack is", stack);
 
   const project = await projectModel.create({
     name,
@@ -49,29 +48,29 @@ const showAllProjects = async ({ id }) => {
   return projects;
 };
 
-const addUserToProject = async ({ anotherID, projectID }) => {
-  if (!anotherID) {
-    throw new AppError("anotherID not provided");
+const addUserToProject = async ({ anotherIDs, projectID }) => {
+  if (!anotherIDs) {
+    throw new AppError("No anotherID provided");
   }
   if (!projectID) {
     throw new AppError("project Id not provided");
   }
-  const user = await userModel
-    .findById(anotherID);
-  if (!user) {
-    throw new AppError("Invalid userID");
-  }
+  // const user = await userModel
+  //   .findById(anotherID);
+  // if (!user) {
+  //   throw new AppError("Invalid userID");
+  // }
   const projectExists = await projectModel.findById(projectID);
 
   if (!projectExists) {
     throw new AppError("No projects Found", 400);
   }
-
+  console.log(anotherIDs);
 
   const project = await projectModel.findByIdAndUpdate(projectID, {
     $push: {
       users: {
-        $each: [anotherID],
+        $each: anotherIDs,
       },
     },
   });
