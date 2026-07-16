@@ -139,13 +139,14 @@ export default function Actions() {
       <div className="max-w-3xl mx-auto">
         {/* Header */}
         {/* Header */}
-        <button className="group mb-6 flex items-center gap-2 text-sm text-neutral-500 transition-all hover:text-cyan-400">
+        <button     
+         onClick={() => {
+              navigate("/project/Dashboard");
+            }}
+            className="group mb-6 flex items-center gap-2 text-sm text-neutral-500 transition-all hover:text-cyan-400">
           <ArrowLeft
             size={15}
             className="transition-transform group-hover:-translate-x-1"
-            onClick={() => {
-              navigate("/project/Dashboard");
-            }}
           />
           Back to Projects
         </button>

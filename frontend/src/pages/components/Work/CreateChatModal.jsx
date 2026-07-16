@@ -7,16 +7,7 @@ import { useEffect } from "react";
 
 import { useParams } from "react-router-dom";
 
-export default function CreateChatModal({ open, onClose }) {
-  // const members = [
-  //   { id: 1, name: "Palak Sharma", added: true },
-  //   { id: 2, name: "Aman Gupta", added: false },
-  //   { id: 3, name: "Priya Verma", added: false },
-  //   { id: 4, name: "Rahul Singh", added: true },
-  //   { id: 5, name: "Ananya Kapoor", added: false },
-  //   { id: 6, name: "Rohan Mehta", added: false },
-  //   { id: 7, name: "Sakshi Jain", added: false },
-  // ];
+export default function CreateChatModal({ open, onClose, onCreate }) {
 
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState([]);
@@ -71,10 +62,15 @@ export default function CreateChatModal({ open, onClose }) {
     selected.length <= 1 ? "Start Personal Chat" : "Create Group Chat";
 
   const submit = () => {
-    console.log({
+    const chatData = {
       type: selected.length <= 1 ? "personal" : "group",
       users: selected,
-    });
+      // for personal chats, grab the one selected user's info for display
+      userDetails: members.filter((m) => selected.includes(m._id)),
+    };
+    console.log(chatData);
+    onCreate?.(chatData);   // <-- the only new line
+    onClose();              // close modal after creating
   };
 
   return (
