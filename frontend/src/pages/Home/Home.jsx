@@ -121,7 +121,6 @@ export default function LandingPage() {
   const [fade, setFade] = useState(true);
   const [resolvedCount, setResolvedCount] = useState(1204);
   const [menuOpen, setMenuOpen] = useState(false);
-
   // Cycle the terminal card
   useEffect(() => {
     const interval = setInterval(() => {

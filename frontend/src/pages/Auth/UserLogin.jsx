@@ -2,7 +2,7 @@ import "../../app/App.css";
 
 import { useState } from "react";
 import { useContext } from "react";
-import { UserContext } from "../../context/User.context.jsx";
+import { UserContext } from "../../context/User.context";
 import { motion } from "framer-motion";
 import { Eye, EyeOff, Mail, Lock } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
@@ -13,7 +13,7 @@ export default function UserLogin() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const {setUser}=useContext(UserContext);
+  const { setUser } = useContext(UserContext);
 
   const navigate = useNavigate();
 
@@ -35,7 +35,7 @@ export default function UserLogin() {
         { email, password },
         { withCredentials: true },
       );
-      localStorage.setItem('token',response.data.user);
+
       setUser(response.data.user);
       console.log(response.data.user);
       navigate("/");

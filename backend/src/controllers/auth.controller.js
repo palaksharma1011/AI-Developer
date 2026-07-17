@@ -44,7 +44,7 @@ const userLogin=asyncHandler(async(req, res) =>{
   delete user._doc.password;
   res.status(200).json({
     message: "User Found",
-    user,
+    user:user
   });
 });
 

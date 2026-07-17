@@ -41,7 +41,6 @@ export default function UserRegister() {
         { withCredentials: true },
       );
       console.log(response.data.user);
-      localStorage.setItem("token", response.data.user);
       setUser(response.data.user);
       navigate("/");
     } catch (err) {
