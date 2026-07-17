@@ -20,7 +20,7 @@ import {
   MessageSquare,
 } from "lucide-react";
 import CreateChatModal from "../components/Work/CreateChatModal";
-
+import { initializeSocket } from "../../config/socket";
 /* =========================================================================
    DESIGN TOKENS (unchanged)
    ========================================================================= */
@@ -193,13 +193,6 @@ function MessageBubble({ msg, onOpenCode }) {
 }
 
 function ChatHeader({ contact, onBack }) {
-  const statusText = contact.isAI
-    ? "Always online"
-    : contact.isGroup
-      ? `${contact.members?.length || 0} members`
-      : contact.online
-        ? "Online"
-        : "Offline";
 
   return (
     <div className="flex items-center gap-3 px-4 py-3 flex-shrink-0" style={{ background: C.surface, borderBottom: `1px solid ${C.border}` }}>
@@ -209,7 +202,6 @@ function ChatHeader({ contact, onBack }) {
       <Avatar name={contact.name} isAI={contact.isAI} isGroup={contact.isGroup} online={contact.online} size={38} />
       <div className="min-w-0 flex-1">
         <p className="font-medium truncate" style={{ color: C.textPrimary }}>{contact.name}</p>
-        <p className="text-xs truncate" style={{ color: contact.online ? C.neon : C.textMuted }}>{statusText}</p>
       </div>
       <button className="p-2 rounded-full" style={{ color: C.textMuted }}>
         <MoreVertical size={20} />
@@ -355,6 +347,8 @@ export default function WorkScreen() {
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
+
+    initializeSocket();
   }, [messages, activeId]);
 
   const openChat = (id) => {
