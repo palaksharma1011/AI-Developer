@@ -9,6 +9,7 @@ const cookie = require("cookie");
 connectDB();
 const http = require("http");
 const projectModel = require("./src/models/project.model.js");
+const userModel = require("./src/models/user.model.js");
 
 const server = http.createServer(app);
 
@@ -44,7 +45,9 @@ io.use(async (socket, next) => {
     if (!decoded) {
       return next(new Error("Authentication Error"));
     }
-    socket.user = decoded;
+    const currUser = await userModel.findById(decoded.id);
+    socket.user = currUser;
+    console.log("decoded", decoded);
     next();
   } catch (err) {
     next(err);
@@ -53,8 +56,11 @@ io.use(async (socket, next) => {
 
 io.on("connection", (socket) => {
   socket.roomId = socket.project._id.toString();
-  console.log("a user is connected");
   socket.join(socket.roomId);
+  console.log(`${socket.user.username}  connected`);
+  socket.to(socket.roomId).emit("user-joined", {
+    username: socket.user.username,
+  });
 
   socket.on("project-message", (data) => {
     console.log(data);
@@ -63,8 +69,13 @@ io.on("connection", (socket) => {
   socket.on("event", (data) => {
     /* … */
   });
+
+  
   socket.on("disconnect", () => {
-    console.log("user disconnected");
+    console.log(`${socket.user.username} disconnected`);
+    socket.to(socket.roomId).emit("user-left", {
+      username: socket.user.username,
+    });
     socket.leave(socket.roomId);
     /* … */
   });

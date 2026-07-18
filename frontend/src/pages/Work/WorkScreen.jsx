@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect, useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import { Search, Send, Paperclip, Smile, Reply, Bot } from "lucide-react";
+import { Search, Send, Paperclip, Smile, Reply, Bot, Bell } from "lucide-react";
+import { useCallback } from "react";
 
 import {
   initializeSocket,
@@ -9,6 +10,7 @@ import {
   receiveMessage,
 } from "../../config/socket";
 import { UserContext } from "../../context/User.context";
+import NotificationCenter from "../components/Work/NotificationCentre";
 
 /* =========================================================================
    Single message bubble
@@ -88,22 +90,54 @@ export default function WorkScreen() {
   const [searchQuery, setSearchQuery] = useState(""); // filters messages / @mentions
   const [aiMode, setAiMode] = useState(false); // true once @AI is used -> swaps 70/30 layout
 
+  const [notifications, setNotifications] = useState([]);
+  const [toasts, setToasts] = useState([]);
+
   const scrollRef = useRef(null);
 
+  const addNotification = (type, username) => {
+    const notification = {
+      id: Date.now() + Math.random(),
+      type,
+      username,
+      time: new Date().toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+    };
+
+    // History
+    setNotifications((prev) => [...prev, notification]);
+    // Toast
+    setToasts((prev) => [notification, ...prev]);
+  };
   // Set up socket listener for this project's chat room
+
   useEffect(() => {
     initializeSocket(id);
-    const off = receiveMessage("project-message", (data) => {
+
+    const offMessage = receiveMessage("project-message", (data) => {
       setMessages((prev) => [...prev, data.newMsg]);
-      if (/@ai\b/i.test(data.newMsg.text)) setAiMode(true);
+
+      if (/@ai\b/i.test(data.newMsg.text)) {
+        setAiMode(true);
+      }
     });
-    // BACKEND HOOK: fetch project details here if needed, e.g.
-    // axios.get(`/api/projects/${id}`).then(res => ...);
+
+    const offJoin = receiveMessage("user-joined", (data) => {
+      addNotification("join", data.username);
+    });
+
+    const offLeave = receiveMessage("user-left", (data) => {
+      addNotification("leave", data.username);
+    });
+
     return () => {
-      off && off();
+      offMessage && offMessage();
+      offJoin && offJoin();
+      offLeave && offLeave();
     };
   }, [id]);
-
   // Auto-scroll to latest message
   useEffect(() => {
     scrollRef.current?.scrollTo({
@@ -117,7 +151,7 @@ export default function WorkScreen() {
     if (!text) return;
 
     const newMsg = {
-      id: Date.now(),
+      id: Date.now() + Math.random(),
       from: user._id,
       name: user.username,
       text,
@@ -147,6 +181,17 @@ export default function WorkScreen() {
     // });
     console.log("Profile clicked");
   };
+  const removeNotification = useCallback((id) => {
+    setNotifications((prev) => prev.filter((n) => n.id !== id));
+  }, []);
+
+  const dismissToast = (id) => {
+    setToasts((prev) => prev.filter((t) => t.id !== id));
+  };
+
+  // const removeNotification = (id) => {
+  //   setNotifications((prev) => prev.filter((n) => n.id !== id));
+  // };
 
   // Text search box also works for @mentions since it's a plain substring match
   const filteredMessages = searchQuery.trim()
@@ -176,6 +221,13 @@ export default function WorkScreen() {
               Project Discurssion
             </p>
           </button>
+
+          <NotificationCenter
+            notifications={notifications}
+            toasts={toasts}
+            dismissToast={dismissToast}
+            removeNotification={removeNotification}
+          />
         </div>
 
         {/* Search bar - filters messages by text or @name */}
