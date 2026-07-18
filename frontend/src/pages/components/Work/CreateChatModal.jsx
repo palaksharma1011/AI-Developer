@@ -27,7 +27,6 @@ export default function CreateChatModal({ open, onClose, onCreate }) {
       const response = await axios.get("user/getAllUser", {
         withCredentials: true,
       });
-      console.log(response.data);
       setMembers(response.data.users);
     } catch (err) {
       console.log(err);

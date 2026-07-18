@@ -8,6 +8,7 @@ import DashBoard from "../pages/Manage/DashBoard";
 import Profile from "../pages/User/Profile";
 import Actions from "../pages/Manage/Actions";
 import WorkScreen from "../pages/Work/WorkScreen";
+import UserAuth from "../Auth/UserAuth";
 
 const AppRoutes = () => {
   return (
@@ -21,7 +22,7 @@ const AppRoutes = () => {
         {/* Projects */}
         <Route path="/project/create" element={<CreateProject />} />
         <Route path="/project/Dashboard" element={<DashBoard />} />
-        <Route path="/project/:id/work" element={<WorkScreen />} />
+        <Route path="/project/:id/work" element={<UserAuth><WorkScreen /></UserAuth>} />
         <Route path="/project/:id/manage" element={<Actions />} />
         {/* not made */}
         <Route path="/project/:id/schedule" element={<Actions />} />
