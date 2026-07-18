@@ -47,7 +47,6 @@ io.use(async (socket, next) => {
     }
     const currUser = await userModel.findById(decoded.id);
     socket.user = currUser;
-    console.log("decoded", decoded);
     next();
   } catch (err) {
     next(err);
@@ -70,7 +69,7 @@ io.on("connection", (socket) => {
     /* … */
   });
 
-  
+
   socket.on("disconnect", () => {
     console.log(`${socket.user.username} disconnected`);
     socket.to(socket.roomId).emit("user-left", {

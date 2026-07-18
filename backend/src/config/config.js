@@ -10,6 +10,7 @@ const config = {
   REDIS_PORT: process.env.REDIS_PORT,
   REDIS_PASSWORD: process.env.REDIS_PASSWORD,
   CLIENT_URL: process.env.CLIENT_URL,
+  GEMINI_API_KEY:process.env.GEMINI_API_KEY
 };
 
 module.exports = config;
