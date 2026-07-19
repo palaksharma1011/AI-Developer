@@ -10,6 +10,7 @@ connectDB();
 const http = require("http");
 const projectModel = require("./src/models/project.model.js");
 const userModel = require("./src/models/user.model.js");
+const { generateResult } = require("./src/services/ai.service.js");
 
 const server = http.createServer(app);
 
@@ -61,14 +62,33 @@ io.on("connection", (socket) => {
     username: socket.user.username,
   });
 
-  socket.on("project-message", (data) => {
-    console.log(data);
+  socket.on("project-message", async (data) => {
     io.to(socket.roomId).emit("project-message", data);
+
+    console.log(data);
+    const text = data.newMsg.text.toLowerCase();
+    const isAIPresent = text.includes("@ai");
+
+    if (isAIPresent) {
+      const prompt = text.replace("@ai", "");
+      // const result = text;
+      // console.log(result);
+      const result = await generateResult(prompt);
+      io.to(socket.roomId).emit("project-message", {
+        newMsg: {
+          id: Math.random(),
+          from: "AI",
+          name: "AI",
+          text: result,
+        },
+        sender: "AI",
+      });
+      return;
+    }
   });
   socket.on("event", (data) => {
     /* … */
   });
-
 
   socket.on("disconnect", () => {
     console.log(`${socket.user.username} disconnected`);

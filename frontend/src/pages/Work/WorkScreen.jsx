@@ -11,17 +11,42 @@ import {
 } from "../../config/socket";
 import { UserContext } from "../../context/User.context";
 import NotificationCenter from "../components/Work/NotificationCentre";
+import AIContent from "../components/Work/AIContent";
 
 /* =========================================================================
    Single message bubble
    ========================================================================= */
 
-function MessageBubble({ msg, isMe, myUsername, onReply }) {
+function MessageBubble({ msg, isMe, myUsername, onReply, onOpenAI }) {
+  console.log("MessageBubble:", msg);
+  console.log("MessageBubble: text=", msg.from);
+  const isAI = msg.from === "AI";
   // Special styling when the message is directed at the AI
   const isAIMessage = /@ai\b/i.test(msg.text);
   // Highlight if someone mentioned the logged-in user by @username
   const mentionsMe =
     myUsername && new RegExp(`@${myUsername}\\b`, "i").test(msg.text);
+
+  if (isAI) {
+    return (
+      <div className="flex justify-start">
+        <button
+          onClick={() => {
+            onOpenAI(msg.text);
+          }}
+          className="bg-zinc-800 rounded-2xl px-4 py-3 border border-violet-500/20"
+        >
+          <div className="flex items-center gap-2">
+            <Bot size={16} />
+            <span>AI</span>
+          </div>
+          <p className="text-sm mt-2 text-emerald-400">
+            ✓ Response ready. Click to view.
+          </p>
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className={`flex ${isMe ? "justify-end" : "justify-start"}`}>
@@ -89,6 +114,8 @@ export default function WorkScreen() {
   const [replyTo, setReplyTo] = useState(null); // message being replied to, if any
   const [searchQuery, setSearchQuery] = useState(""); // filters messages / @mentions
   const [aiMode, setAiMode] = useState(false); // true once @AI is used -> swaps 70/30 layout
+
+  const [selectedAIContent, setSelectedAIContent] = useState("");
 
   const [notifications, setNotifications] = useState([]);
   const [toasts, setToasts] = useState([]);
@@ -175,11 +202,7 @@ export default function WorkScreen() {
   };
 
   const handleProfileClick = () => {
-    // BACKEND HOOK: fetch profile then navigate
-    // axios.get("user/profile").then((res) => {
-    //   navigate("/profile", { state: res.data });
-    // });
-    console.log("Profile clicked");
+    navigate(`/project/${id}/manage`);
   };
   const removeNotification = useCallback((id) => {
     setNotifications((prev) => prev.filter((n) => n.id !== id));
@@ -199,6 +222,11 @@ export default function WorkScreen() {
         m.text.toLowerCase().includes(searchQuery.trim().toLowerCase()),
       )
     : messages;
+
+  const handleOpenAI = (content) => {
+    setSelectedAIContent(content);
+    setAiMode(true);
+  };
 
   return (
     <div className="flex w-full h-screen overflow-hidden bg-black font-sans">
@@ -260,6 +288,7 @@ export default function WorkScreen() {
                 isMe={m.from === user._id}
                 myUsername={user.username}
                 onReply={setReplyTo}
+                onOpenAI={handleOpenAI}
               />
             ))
           )}
@@ -333,7 +362,9 @@ export default function WorkScreen() {
         className={`hidden md:flex bg-black transition-all duration-300 ${
           aiMode ? "md:w-[70%]" : "md:w-[30%]"
         }`}
-      ></div>
+      >
+        <AIContent content={selectedAIContent} />
+      </div>
     </div>
   );
 }
