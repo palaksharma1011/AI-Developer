@@ -9,6 +9,7 @@ import Profile from "../pages/User/Profile";
 import Actions from "../pages/Manage/Actions";
 import WorkScreen from "../pages/Work/WorkScreen";
 import UserAuth from "../Auth/UserAuth";
+import LandingPage from "../pages/testing/Testing";
 
 const AppRoutes = () => {
   return (
@@ -29,6 +30,9 @@ const AppRoutes = () => {
 
         {/* User */}
         <Route path="/user/profile" element={<Profile />} />
+
+        {/* testing */}
+        <Route path="/testing" element={<LandingPage/>}/>
       </Routes>
     </BrowserRouter>
   );

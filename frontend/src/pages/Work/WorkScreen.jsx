@@ -19,7 +19,6 @@ import AIContent from "../components/Work/AIContent";
 
 function MessageBubble({ msg, isMe, myUsername, onReply, onOpenAI }) {
   console.log("MessageBubble:", msg);
-  console.log("MessageBubble: text=", msg.from);
   const isAI = msg.from === "AI";
   // Special styling when the message is directed at the AI
   const isAIMessage = /@ai\b/i.test(msg.text);
