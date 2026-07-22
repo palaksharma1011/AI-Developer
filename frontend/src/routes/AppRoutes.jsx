@@ -27,6 +27,7 @@ const AppRoutes = () => {
         <Route path="/project/:id/manage" element={<Actions />} />
         {/* not made */}
         <Route path="/project/:id/schedule" element={<Actions />} />
+        <Route path="/schedule" element={<Scheduler />}/>
 
         {/* User */}
         <Route path="/user/profile" element={<Profile />} />
